@@ -188,9 +188,8 @@ function makeBalancedTeams(entries,teamCount){
    const options=teams.filter(t=>t.players+u.size<=5).map(t=>{
     const next={...t,players:t.players+u.size,power:t.power+u.mmr*u.size,roles:{...t.roles}};
     if(u.role!=='any')next.roles[u.role]=(next.roles[u.role]||0)+1;
-    const currentScore=balanceScore(teams);
     const newTeams=teams.map(x=>x===t?next:x);
-    return {team:t,score:balanceScore(newTeams)-currentScore};
+    return {team:t,score:balanceScore(newTeams)};
    }).sort((a,b)=>a.score-b.score);
    if(!options.length){left.push(u);continue}
    const shortlist=options.slice(0,Math.min(3,options.length));
