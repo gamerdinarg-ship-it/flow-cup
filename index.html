@@ -163,13 +163,28 @@ async function loadOrganizerEntries(){
  sel.innerHTML=names.map(n=>'<option value="'+escapeHtml(n)+'">'+escapeHtml(n)+'</option>').join('');
  if(names.includes(previous))sel.value=previous;
  const tournament=sel.value;
- const {data,error}=await sbClient.from('cup_tournament_entries').select('id,tournament_name,nickname,mmr,preferred_role,entry_type,party_name,party_members,party_size,created_at,status').eq('tournament_name',tournament).order('created_at',{ascending:true});
  const root=$('#organizerEntries');
- if(error){root.innerHTML='';showOrganizerNotice('Не удалось загрузить заявки: '+error.message,true);return}
- if(!data?.length){root.innerHTML='<p class="hint">Заявок на этот турнир пока нет.</p>';return}
+ const cloudTournament=cloudTournaments.find(t=>t.name===tournament);
+ const isClosed=cloudTournament?.status==='closed';
+ const toggleLabel=isClosed?'Открыть регистрацию':'Закрыть регистрацию';
+ root.innerHTML='<div class="tour" style="margin:12px 0"><div class="tour-top"><strong>Регистрация</strong><span class="tag '+(isClosed?'gray':'green')+'">'+(isClosed?'Закрыта':'Открыта')+'</span></div><p style="margin:8px 0 12px">'+(isClosed?'Новые заявки на этот турнир отключены.':'Игроки могут подавать заявки на этот турнир.')+'</p><button class="btn '+(isClosed?'primary':'ghost')+'" id="toggleRegistration" type="button" '+(!cloudTournament?'disabled':'')+'>'+toggleLabel+'</button>'+(cloudTournament?'':'<p class="hint" style="margin-top:8px">Для встроенных демо-турниров управление регистрацией пока недоступно. Создай турнир через эту панель, чтобы управлять его статусом.</p>')+'</div><div id="organizerEntryList"></div>';
+ const toggle=$('#toggleRegistration');
+ if(cloudTournament&&toggle)toggle.onclick=async()=>{
+  toggle.disabled=true;
+  const nextStatus=isClosed?'open':'closed';
+  const {error}=await sbClient.from('cup_tournaments').update({status:nextStatus}).eq('id',cloudTournament.id);
+  toggle.disabled=false;
+  if(error){showOrganizerNotice('Не удалось изменить регистрацию: '+error.message,true);return}
+  showOrganizerNotice(nextStatus==='closed'?'Регистрация закрыта. Карточка турнира обновится у всех посетителей.':'Регистрация снова открыта. Игроки могут подавать заявки.');
+  await loadCloudTournaments();await loadOrganizerEntries();
+ };
+ const {data,error}=await sbClient.from('cup_tournament_entries').select('id,tournament_name,nickname,mmr,preferred_role,entry_type,party_name,party_members,party_size,created_at,status').eq('tournament_name',tournament).order('created_at',{ascending:true});
+ const list=$('#organizerEntryList');
+ if(error){list.innerHTML='';showOrganizerNotice('Не удалось загрузить заявки: '+error.message,true);return}
+ if(!data?.length){list.innerHTML='<p class="hint">Заявок на этот турнир пока нет.</p>';return}
  const labels={pending:'На рассмотрении',approved:'Подтверждена',rejected:'Отклонена'};
- root.innerHTML='<div class="stats" style="margin:12px 0"><div class="stat"><strong>'+data.length+'</strong><small>заявок</small></div><div class="stat"><strong>'+data.filter(e=>(e.status||'pending')==='approved').length+'</strong><small>подтверждено</small></div><div class="stat"><strong>'+data.reduce((n,e)=>n+(Number(e.party_size)||1),0)+'</strong><small>игроков заявлено</small></div></div>'+data.map(e=>'<article class="tour" style="margin:10px 0"><div class="tour-top"><strong>'+escapeHtml(e.party_name||e.nickname)+'</strong><span class="tag">'+Number(e.party_size||1)+' игрок(а/ов)</span></div><p>'+escapeHtml(e.nickname)+' · '+Number(e.mmr)+' MMR · '+escapeHtml(roleLabel[e.preferred_role]||'Любая')+' · '+escapeHtml(e.entry_type)+'</p>'+(e.party_members?.length?'<p class="hint">Состав: '+escapeHtml(e.party_members.join(', '))+'</p>':'')+'<div class="form-row"><div class="field"><label for="status-'+e.id+'">Статус заявки</label><select id="status-'+e.id+'"><option value="pending" '+((e.status||'pending')==='pending'?'selected':'')+'>На рассмотрении</option><option value="approved" '+(e.status==='approved'?'selected':'')+'>Подтверждена</option><option value="rejected" '+(e.status==='rejected'?'selected':'')+'>Отклонена</option></select></div><div class="field" style="justify-content:end"><button class="btn ghost save-entry-status" data-entry="'+e.id+'" type="button">Сохранить статус</button></div></div></article>').join('');
- root.querySelectorAll('.save-entry-status').forEach(btn=>btn.onclick=async()=>{
+ list.innerHTML='<div class="stats" style="margin:12px 0"><div class="stat"><strong>'+data.length+'</strong><small>заявок</small></div><div class="stat"><strong>'+data.filter(e=>(e.status||'pending')==='approved').length+'</strong><small>подтверждено</small></div><div class="stat"><strong>'+data.reduce((n,e)=>n+(Number(e.party_size)||1),0)+'</strong><small>игроков заявлено</small></div></div>'+data.map(e=>'<article class="tour" style="margin:10px 0"><div class="tour-top"><strong>'+escapeHtml(e.party_name||e.nickname)+'</strong><span class="tag">'+Number(e.party_size||1)+' игрок(а/ов)</span></div><p>'+escapeHtml(e.nickname)+' · '+Number(e.mmr)+' MMR · '+escapeHtml(roleLabel[e.preferred_role]||'Любая')+' · '+escapeHtml(e.entry_type)+'</p>'+(e.party_members?.length?'<p class="hint">Состав: '+escapeHtml(e.party_members.join(', '))+'</p>':'')+'<div class="form-row"><div class="field"><label for="status-'+e.id+'">Статус заявки</label><select id="status-'+e.id+'"><option value="pending" '+((e.status||'pending')==='pending'?'selected':'')+'>На рассмотрении</option><option value="approved" '+(e.status==='approved'?'selected':'')+'>Подтверждена</option><option value="rejected" '+(e.status==='rejected'?'selected':'')+'>Отклонена</option></select></div><div class="field" style="justify-content:end"><button class="btn ghost save-entry-status" data-entry="'+e.id+'" type="button">Сохранить статус</button></div></div></article>').join('');
+ list.querySelectorAll('.save-entry-status').forEach(btn=>btn.onclick=async()=>{
   const id=btn.dataset.entry,status=$('#status-'+id).value;btn.disabled=true;
   const {error}=await sbClient.from('cup_tournament_entries').update({status}).eq('id',id);btn.disabled=false;
   if(error){showOrganizerNotice('Не удалось изменить статус: '+error.message,true);return}
