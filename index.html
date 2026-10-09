@@ -96,9 +96,19 @@ async function signInAndSave(){
   const {data,error}=await sbClient.auth.signInWithPassword({email,password});
   if(error){showProfileNotice('Не удалось войти: '+error.message,true);return}
   currentUser=data.user;
-  try{await saveProfileToCloud(currentUser);showProfileNotice('Вход выполнен. Профиль сохранён в базе данных.');setTimeout(closeModals,800)}catch(e){showProfileNotice('Вход выполнен, но профиль не сохранился: '+e.message,true)}
-  renderAuthState();
-  await loadFriendGroup();if(pendingInvite)processPendingInvite();
+  await loadCloudProfile(currentUser);
+  try{
+    if(profile){
+      $('#nick').value=profile.nick||'';$('#steam').value=profile.steam||'';$('#mmr').value=profile.mmr??'';$('#role').value=profile.role||'Любая';
+      showProfileNotice('Вход выполнен. Профиль загружен из общей базы.');
+    }else{
+      if(!$('#nick').value.trim()||$('#mmr').value===''){showProfileNotice('Вход выполнен. Заполни игровой ник и MMR, затем нажми «Уже есть аккаунт — войти» ещё раз.');renderAuthState();return}
+      await saveProfileToCloud(currentUser);showProfileNotice('Вход выполнен. Профиль сохранён в базе данных.');
+    }
+    renderAuthState();await loadFriendGroup();
+    if(pendingInvite)processPendingInvite();else setTimeout(closeModals,800);
+  }catch(e){showProfileNotice('Вход выполнен, но профиль не сохранился: '+e.message,true)}
+
 }
 $('#profileForm').addEventListener('submit',async e=>{
   e.preventDefault();
