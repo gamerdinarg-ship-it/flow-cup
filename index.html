@@ -221,6 +221,7 @@ async function saveBalanceDraft(){
  if(!currentUser){$('#balanceNotice').textContent='Войди в аккаунт FLOW CUP, чтобы сохранять черновики.';$('#balanceNotice').classList.add('show');profileOpen();return}
  if(!currentBalanceResult){$('#balanceNotice').textContent='Сначала сформируй составы.';$('#balanceNotice').classList.add('show');return}
  const {result,tournament}=currentBalanceResult;
+ if(tournament!==$('#balanceTournament').value||result.teams.length!==Number($('#balanceTeamCount').value)){const n=$('#balanceNotice');n.textContent='Ты изменил турнир или число команд после расчёта. Сформируй составы заново перед сохранением.';n.style.borderColor='#ff6682';n.classList.add('show');return}
  const cleanUnit=u=>({id:u.id,name:u.name,captain:u.captain,mmr:u.mmr,size:u.size,role:u.role,members:u.members,type:u.type,created:u.created});
  const composition={teams:result.teams.map(t=>({name:t.name,units:t.units.map(cleanUnit),players:t.players,power:t.power,roles:t.roles})),left:result.left.map(cleanUnit),units:result.units.map(cleanUnit)};
  const {error}=await sbClient.from('cup_team_balance_drafts').upsert({user_id:currentUser.id,tournament_name:tournament,team_count:Number($('#balanceTeamCount').value),composition,updated_at:new Date().toISOString()},{onConflict:'user_id,tournament_name'});
