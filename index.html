@@ -29,7 +29,7 @@
 <div class="modal-bg" id="createModal"><div class="modal"><div class="modal-head"><h2>Создать турнир</h2><button class="close" data-close>×</button></div><form id="createForm"><div class="field"><label for="newName">Название турнира *</label><input id="newName" required maxlength="50" placeholder="Например, FLOW OPEN #02"></div><div class="form-row"><div class="field"><label for="newFormat">Формат</label><select id="newFormat"><option>5×5</option><option>Mix</option><option>Stack</option></select></div><div class="field"><label for="newTeams">Команд</label><select id="newTeams"><option>4</option><option selected>8</option><option>16</option></select></div></div><div class="field"><label for="newDesc">Описание</label><input id="newDesc" maxlength="100" placeholder="Правила, формат, ограничения"></div><button class="btn primary" type="submit">Добавить демо-турнир</button><p class="hint">Пока турнир добавляется только в локальную страницу. Панель организатора подключим после настройки базы.</p><div class="notice" id="createNotice">Турнир добавлен на страницу.</div></form></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = "https://rylqacxdaemtshzvnaat.sbClient.co";
+const SUPABASE_URL = "https://rylqacxdaemtshzvnaat.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_39IXfua1UePKCP3HGR0u7A_ZCNht7Uv";
 const sbClient = window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
