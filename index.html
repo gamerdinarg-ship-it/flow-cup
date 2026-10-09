@@ -29,9 +29,9 @@
 <div class="modal-bg" id="createModal"><div class="modal"><div class="modal-head"><h2>Создать турнир</h2><button class="close" data-close>×</button></div><form id="createForm"><div class="field"><label for="newName">Название турнира *</label><input id="newName" required maxlength="50" placeholder="Например, FLOW OPEN #02"></div><div class="form-row"><div class="field"><label for="newFormat">Формат</label><select id="newFormat"><option>5×5</option><option>Mix</option><option>Stack</option></select></div><div class="field"><label for="newTeams">Команд</label><select id="newTeams"><option>4</option><option selected>8</option><option>16</option></select></div></div><div class="field"><label for="newDesc">Описание</label><input id="newDesc" maxlength="100" placeholder="Правила, формат, ограничения"></div><button class="btn primary" type="submit">Добавить демо-турнир</button><p class="hint">Пока турнир добавляется только в локальную страницу. Панель организатора подключим после настройки базы.</p><div class="notice" id="createNotice">Турнир добавлен на страницу.</div></form></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = "https://rylqacxdaemtshzvnaat.supabase.co";
+const SUPABASE_URL = "https://rylqacxdaemtshzvnaat.sbClient.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_39IXfua1UePKCP3HGR0u7A_ZCNht7Uv";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const sbClient = window.supabase?.createClient ? window.sbClient.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const get=(k,d)=>{try{return JSON.parse(localStorage.getItem('flowcup_'+k))??d}catch{return d}};
 const put=(k,v)=>localStorage.setItem('flowcup_'+k,JSON.stringify(v));
@@ -40,22 +40,25 @@ const roleMap={'Керри':'carry','Мид':'mid','Оффлейн':'offlane','�
 const roleLabel={carry:'Керри',mid:'Мид',offlane:'Оффлейн',soft_support:'Саппорт 4',hard_support:'Саппорт 5',any:'Любая'};
 function showProfileNotice(message,isError=false){const n=$('#profileNotice');n.textContent=message;n.classList.add('show');n.style.borderColor=isError?'#ff6682':''}
 async function saveProfileToCloud(user){
+  if(!sbClient) throw new Error('Не загрузился модуль авторизации Supabase. Обнови страницу или проверь блокировщик скриптов.');
   const payload={id:user.id,nickname:$('#nick').value.trim(),steam_id:$('#steam').value.trim()||null,mmr:Number($('#mmr').value),preferred_role:roleMap[$('#role').value]||'any'};
-  const {error}=await supabase.from('profiles').upsert(payload,{onConflict:'id'});
+  const {error}=await sbClient.from('profiles').upsert(payload,{onConflict:'id'});
   if(error) throw error;
   profile={nick:payload.nickname,steam:payload.steam_id||'',mmr:payload.mmr,role:$('#role').value};
   put('profile',profile);renderProfile();
 }
 async function loadCloudProfile(user){
-  const {data,error}=await supabase.from('profiles').select('nickname,steam_id,mmr,preferred_role').eq('id',user.id).maybeSingle();
+  if(!sbClient) return;
+  const {data,error}=await sbClient.from('profiles').select('nickname,steam_id,mmr,preferred_role').eq('id',user.id).maybeSingle();
   if(error){console.error(error);return}
   if(data){profile={nick:data.nickname,steam:data.steam_id||'',mmr:data.mmr,role:roleLabel[data.preferred_role]||'Любая'};put('profile',profile);renderProfile()}
 }
 async function initAuth(){
-  const {data}=await supabase.auth.getSession();currentUser=data.session?.user||null;
+  if(!sbClient){renderAuthState();return}
+  const {data}=await sbClient.auth.getSession();currentUser=data.session?.user||null;
   if(currentUser) await loadCloudProfile(currentUser);
   renderAuthState();
-  supabase.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;renderAuthState();if(currentUser)loadCloudProfile(currentUser)});
+  sbClient.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;renderAuthState();if(currentUser)loadCloudProfile(currentUser)});
 }
 function renderAuthState(){
   const b=$('#profileBtn');if(b)b.textContent=currentUser?'Мой профиль':'Войти';
@@ -73,9 +76,10 @@ $('#stackBtn').onclick=()=>{if(!currentUser||!profile){profileOpen();return}open
 function openRegister(name){currentTournament=name;$('#selectedTournament').textContent=name;$('#registerNotice').classList.remove('show');openModal('registerModal')}
 $$('.register-btn').forEach(b=>b.onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister(b.dataset.tournament)});
 async function signInAndSave(){
+  if(!sbClient){showProfileNotice('Не загрузился модуль авторизации Supabase. Обнови страницу или проверь блокировщик скриптов.',true);return}
   const email=$('#authEmail').value.trim(),password=$('#authPassword').value;
   if(!email||!password){showProfileNotice('Укажи электронную почту и пароль.',true);return}
-  const {data,error}=await supabase.auth.signInWithPassword({email,password});
+  const {data,error}=await sbClient.auth.signInWithPassword({email,password});
   if(error){showProfileNotice('Не удалось войти: '+error.message,true);return}
   currentUser=data.user;
   try{await saveProfileToCloud(currentUser);showProfileNotice('Вход выполнен. Профиль сохранён в базе данных.');setTimeout(closeModals,800)}catch(e){showProfileNotice('Вход выполнен, но профиль не сохранился: '+e.message,true)}
@@ -83,9 +87,10 @@ async function signInAndSave(){
 }
 $('#profileForm').addEventListener('submit',async e=>{
   e.preventDefault();
+  if(!sbClient){showProfileNotice('Не загрузился модуль авторизации Supabase. Обнови страницу или проверь блокировщик скриптов.',true);return}
   const email=$('#authEmail').value.trim(),password=$('#authPassword').value;
   if(!email||password.length<6){showProfileNotice('Укажи почту и пароль не короче 6 символов.',true);return}
-  const {data,error}=await supabase.auth.signUp({email,password});
+  const {data,error}=await sbClient.auth.signUp({email,password});
   if(error){showProfileNotice('Не удалось создать аккаунт: '+error.message+' Если аккаунт уже есть, нажми «войти».',true);return}
   currentUser=data.session?.user||null;
   if(!currentUser){showProfileNotice('Аккаунт создан. Проверь почту и подтверди регистрацию, затем нажми «Уже есть аккаунт — войти».');return}
