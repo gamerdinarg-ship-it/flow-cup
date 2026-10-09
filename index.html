@@ -16,7 +16,7 @@
 <main>
 <div class="wrap hero"><div><div class="eyebrow"><i class="dot"></i> DOTA 2 COMMUNITY TOURNAMENTS</div><h1>Твоя команда.<br>Твой путь.<br><em>Твой FLOW.</em></h1><p class="lead">Турниры по Dota 2 для соло-игроков, друзей и готовых стаков. Собирай команду, играй матчи и доказывай свой уровень.</p><div class="actions"><button class="btn primary" id="joinHero">Найти турнир <span aria-hidden="true">→</span></button><a class="btn ghost" href="#tournaments" style="text-decoration:none">Смотреть сетку ↓</a></div></div>
 <aside class="hero-card"><div class="mini-title">БЛИЖАЙШИЙ ТУРНИР</div><div class="featured"><div class="emblem">⚔</div><div><h3>FLOW OPEN #01</h3><p>Открытый турнир · Все уровни</p></div></div><div class="stats"><div class="stat"><strong id="playerCount">0</strong><small>игроков в заявках</small></div><div class="stat"><strong>5×5</strong><small>формат матчей</small></div><div class="stat"><strong>FREE</strong><small>вход свободный</small></div></div><p style="margin:18px 0 0;color:var(--muted);font-size:12px">Соло, пати и полные стаки — можно играть своим составом независимо от разницы MMR.</p></aside></div>
-<section class="wrap section" id="tournaments"><div class="section-head"><div><h2>Турниры</h2><p>Выбирай формат и собирай состав</p></div><button class="btn ghost" id="createBtn">＋ Создать турнир</button><button class="btn primary" id="balanceBtn">⚖ Баланс команд</button></div><div class="cards" id="tournamentCards">
+<section class="wrap section" id="tournaments"><div class="section-head"><div><h2>Турниры</h2><p>Выбирай формат и собирай состав</p></div><button class="btn ghost" id="createBtn">＋ Создать турнир</button><button class="btn ghost" id="organizerBtn">⚙ Организатор</button><button class="btn primary" id="balanceBtn">⚖ Баланс команд</button></div><div class="cards" id="tournamentCards">
 <article class="tour"><div class="tour-top"><span class="tag green">Регистрация открыта</span><span class="tag">5×5</span></div><h3>FLOW OPEN #01</h3><p>Первый открытый кубок сообщества</p><div class="tour-stats"><span>◷ Скоро</span><span>♙ До 8 команд</span><span>◎ Любой MMR</span></div><button class="btn primary register-btn" data-tournament="FLOW OPEN #01">Подать заявку</button></article>
 <article class="tour"><div class="tour-top"><span class="tag">Тестовый формат</span><span class="tag">Mix</span></div><h3>FLOW MIX NIGHT</h3><p>Случайные команды с балансом по MMR</p><div class="tour-stats"><span>◷ По набору</span><span>♙ Соло и пати</span></div><button class="btn register-btn" data-tournament="FLOW MIX NIGHT">Подать заявку</button></article>
 <article class="tour"><div class="tour-top"><span class="tag gray">Скоро</span><span class="tag">Stack</span></div><h3>FIVE STACK CUP</h3><p>Для готовых команд из пяти игроков</p><div class="tour-stats"><span>◷ Анонсируется</span><span>♙ Готовый стак</span></div><button class="btn register-btn" data-tournament="FIVE STACK CUP">Оставить заявку</button></article>
@@ -28,6 +28,7 @@
 <div class="modal-bg" id="registerModal"><div class="modal"><div class="modal-head"><h2>Заявка на турнир</h2><button class="close" data-close>×</button></div><p id="selectedTournament" class="hint">FLOW OPEN #01</p><form id="registerForm"><div class="field"><label for="entryType">Как участвуешь?</label><select id="entryType"><option value="solo">Соло-игрок</option><option value="duo">Дуо — 2 игрока</option><option value="party3">Группа — 3 игрока</option><option value="party4">Группа — 4 игрока</option><option value="stack5">Полный стак — 5 игроков</option></select></div><div class="field"><label for="partyName">Название группы / команды (необязательно)</label><input id="partyName" maxlength="40" placeholder="Например, Five Stack"></div><div class="field"><label for="partyMembers">Ники друзей (через запятую, если есть)</label><input id="partyMembers" placeholder="Игрок2, Игрок3, Игрок4, Игрок5"></div><p class="hint">Для полного стака разница MMR не запрещает подачу заявки. Пока друзья указываются по никам вручную. Для соло укажи 0 друзей, для дуо — 1, группы из 3 — 2, из 4 — 3, полного стака — 4. Группа подаётся одной заявкой, чтобы её не разделяли при распределении.</p><button class="btn primary" type="submit">Сохранить заявку</button><div class="notice" id="registerNotice"></div></form></div></div>
 <div class="modal-bg" id="createModal"><div class="modal"><div class="modal-head"><h2>Создать турнир</h2><button class="close" data-close>×</button></div><form id="createForm"><div class="field"><label for="newName">Название турнира *</label><input id="newName" required maxlength="50" placeholder="Например, FLOW OPEN #02"></div><div class="form-row"><div class="field"><label for="newFormat">Формат</label><select id="newFormat"><option>5×5</option><option>Mix</option><option>Stack</option></select></div><div class="field"><label for="newTeams">Команд</label><select id="newTeams"><option>4</option><option selected>8</option><option>16</option></select></div></div><div class="field"><label for="newDesc">Описание</label><input id="newDesc" maxlength="100" placeholder="Правила, формат, ограничения"></div><button class="btn primary" type="submit">Добавить демо-турнир</button><p class="hint">Пока турнир добавляется только в локальную страницу. Панель организатора подключим после настройки базы.</p><div class="notice" id="createNotice">Турнир добавлен на страницу.</div></form></div></div>
 <div class="modal-bg" id="friendGroupModal"><div class="modal"><div class="modal-head"><h2>Группа друзей</h2><button class="close" data-close>×</button></div><p class="hint">Создай группу и отправь друзьям ссылку. Каждый участник войдёт в FLOW CUP и присоединится по приглашению. Максимум — 5 аккаунтов.</p><div id="friendGroupNotice" class="notice"></div><div id="friendGroupCurrent" style="display:none"></div><div id="friendGroupSetup"><form id="friendGroupCreateForm"><div class="field"><label for="friendGroupName">Название группы</label><input id="friendGroupName" maxlength="40" minlength="2" required placeholder="Например, Five Stack"></div><button class="btn primary" type="submit">Создать группу и получить ссылку</button></form><div style="text-align:center;color:var(--muted);font-size:12px;margin:14px 0">или</div><form id="friendGroupJoinForm"><div class="field"><label for="friendInviteCode">Код приглашения</label><input id="friendInviteCode" required placeholder="Вставь код или ссылку-приглашение"></div><button class="btn ghost" type="submit">Вступить в группу</button></form></div></div></div>
+<div class="modal-bg" id="organizerModal"><div class="modal" style="width:min(100%,1000px)"><div class="modal-head"><h2>Панель организатора</h2><button class="close" data-close>×</button></div><p class="hint">Управляй турнирами и заявками. Изменения сохраняются в общей базе.</p><div id="organizerNotice" class="notice"></div><div class="form-row"><div class="field"><label for="organizerTournament">Турнир</label><select id="organizerTournament"></select></div><div class="field" style="justify-content:end"><button class="btn primary" id="refreshOrganizer" type="button">Обновить заявки</button></div></div><div id="organizerEntries"></div><div class="divider" style="margin:20px 0"></div><h3>Создать турнир</h3><p class="hint">Новая карточка появится у всех посетителей после сохранения.</p><form id="cloudCreateForm"><div class="field"><label for="orgNewName">Название *</label><input id="orgNewName" maxlength="50" required placeholder="FLOW OPEN #02"></div><div class="form-row"><div class="field"><label for="orgNewFormat">Формат</label><select id="orgNewFormat"><option>5×5</option><option>Mix</option><option>Stack</option></select></div><div class="field"><label for="orgNewTeams">Количество команд</label><select id="orgNewTeams"><option>4</option><option selected>8</option><option>16</option></select></div></div><div class="field"><label for="orgNewDesc">Описание</label><input id="orgNewDesc" maxlength="100" placeholder="Правила, формат, ограничения"></div><button class="btn primary" type="submit">Создать турнир</button></form></div></div>
 <div class="modal-bg" id="balanceModal"><div class="modal" style="width:min(100%,900px)"><div class="modal-head"><h2>Балансировщик команд</h2><button class="close" data-close>×</button></div><p class="hint">Распредели заявки по командам до 5 игроков. Группы из одной заявки не разделяются. Сохраняй личные черновики составов в аккаунте — опубликованными они не станут, пока не появится отдельная панель организатора.</p><div class="form-row"><div class="field"><label for="balanceTournament">Турнир</label><select id="balanceTournament"><option value="FLOW OPEN #01">FLOW OPEN #01</option><option value="FLOW MIX NIGHT">FLOW MIX NIGHT</option><option value="FIVE STACK CUP">FIVE STACK CUP</option></select></div><div class="field"><label for="balanceTeamCount">Сколько команд планируется</label><select id="balanceTeamCount"><option>2</option><option>4</option><option selected>8</option><option>16</option></select></div></div><div class="form-row"><button class="btn primary" id="runBalance" type="button">Сформировать составы</button><button class="btn ghost" id="loadBalanceDraft" type="button">Загрузить мой черновик</button></div><div id="balanceNotice" class="notice"></div><div id="balanceResults" style="margin-top:16px"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -37,7 +38,7 @@ const sbClient = window.supabase?.createClient ? window.supabase.createClient(SU
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const get=(k,d)=>{try{return JSON.parse(localStorage.getItem('flowcup_'+k))??d}catch{return d}};
 const put=(k,v)=>localStorage.setItem('flowcup_'+k,JSON.stringify(v));
-let profile=get('profile',null),entries=get('entries',[]),created=get('created',[]),currentTournament='FLOW OPEN #01',currentUser=null,cloudEntries=[],cloudEntriesLoaded=false,friendGroup=null,pendingInvite=new URLSearchParams(window.location.search).get('invite'),inviteJoining=false;
+let profile=get('profile',null),entries=get('entries',[]),created=get('created',[]),currentTournament='FLOW OPEN #01',currentUser=null,cloudEntries=[],cloudEntriesLoaded=false,cloudTournaments=[],isOrganizer=false,friendGroup=null,pendingInvite=new URLSearchParams(window.location.search).get('invite'),inviteJoining=false;
 const roleMap={'Керри':'carry','Мид':'mid','Оффлейн':'offlane','Саппорт 4':'soft_support','Саппорт 5':'hard_support','Любая':'any'};
 const roleLabel={carry:'Керри',mid:'Мид',offlane:'Оффлейн',soft_support:'Саппорт 4',hard_support:'Саппорт 5',any:'Любая'};
 function showProfileNotice(message,isError=false){const n=$('#profileNotice');n.textContent=message;n.classList.add('show');n.style.borderColor=isError?'#ff6682':''}
@@ -60,17 +61,19 @@ async function initAuth(){
   const {data}=await sbClient.auth.getSession();currentUser=data.session?.user||null;
   if(currentUser) await loadCloudProfile(currentUser);
   await loadCloudEntries();
+  await loadCloudTournaments();
+  await checkOrganizer();
   renderAuthState();
   if(currentUser){await loadFriendGroup();if(pendingInvite)processPendingInvite()}
   sbClient.auth.onAuthStateChange((_event,session)=>{
     currentUser=session?.user||null;renderAuthState();
-    if(currentUser){loadCloudProfile(currentUser);loadCloudEntries();loadFriendGroup().then(()=>{if(pendingInvite)processPendingInvite()})}
+    if(currentUser){loadCloudProfile(currentUser);loadCloudEntries();loadCloudTournaments();checkOrganizer();loadFriendGroup().then(()=>{if(pendingInvite)processPendingInvite()})}
     else{friendGroup=null;renderFriendGroup()}
   });
 }
 async function loadCloudEntries(){
   if(!sbClient)return;
-  const {data,error}=await sbClient.from('cup_tournament_entries').select('tournament_name,user_id,nickname,mmr,preferred_role,entry_type,party_name,party_members,party_size,created_at');
+  const {data,error}=await sbClient.from('cup_tournament_entries').select('id,tournament_name,user_id,nickname,mmr,preferred_role,entry_type,party_name,party_members,party_size,created_at,status');
   if(error){console.warn('Не удалось загрузить заявки из общей базы:',error.message);return}
   cloudEntries=data||[];cloudEntriesLoaded=true;renderStats();
 }
@@ -124,9 +127,67 @@ $('#profileForm').addEventListener('submit',async e=>{
 });
 $('#loginBtn').addEventListener('click',signInAndSave);
 $('#registerForm').addEventListener('submit',async e=>{e.preventDefault();if(!currentUser||!profile){closeModals();profileOpen();return}if(!sbClient){$('#registerNotice').textContent='Не удалось подключиться к базе данных. Обнови страницу и попробуй ещё раз.';$('#registerNotice').classList.add('show');return}const type=$('#entryType').value;const sizes={solo:1,duo:2,party3:3,party4:4,stack5:5};const members=$('#partyMembers').value.split(',').map(x=>x.trim()).filter(Boolean);if(members.length!==sizes[type]-1){$('#registerNotice').textContent=type==='solo'?'Для соло-заявки очисти поле с никами друзей.':'Укажи ровно '+(sizes[type]-1)+' ник(а/ов) друзей через запятую, чтобы сохранить группу целиком.';$('#registerNotice').style.borderColor='#ff6682';$('#registerNotice').classList.add('show');return}if(type!=='solo'&&!$('#partyName').value.trim()){$('#registerNotice').textContent='Укажи название группы, чтобы организатор видел, кого нельзя разделять.';$('#registerNotice').style.borderColor='#ff6682';$('#registerNotice').classList.add('show');return}const payload={tournament_name:currentTournament,user_id:currentUser.id,nickname:profile.nick,mmr:Number(profile.mmr),preferred_role:roleMap[profile.role]||'any',entry_type:type,party_name:$('#partyName').value.trim()||null,party_members:members,party_size:sizes[type]};const {data,error}=await sbClient.from('cup_tournament_entries').insert(payload).select('tournament_name,party_size,user_id').single();if(error){$('#registerNotice').textContent=error.code==='23505'?'Ты уже подал заявку на этот турнир с этого аккаунта.':'Не удалось сохранить заявку: '+error.message;$('#registerNotice').style.borderColor='#ff6682';$('#registerNotice').classList.add('show');return}cloudEntries.push(data);cloudEntriesLoaded=true;$('#registerNotice').textContent='Заявка сохранена в общей базе FLOW CUP. Группа сохранена одной заявкой, поэтому организатор сможет учитывать её как единый состав. Данные больше не зависят от этого браузера.';$('#registerNotice').style.borderColor='';$('#registerNotice').classList.add('show');renderStats();setTimeout(closeModals,1400)});
-$('#createBtn').onclick=()=>openModal('createModal');
-$('#createForm').addEventListener('submit',e=>{e.preventDefault();const t={name:$('#newName').value.trim(),format:$('#newFormat').value,teams:$('#newTeams').value,desc:$('#newDesc').value.trim()};created.push(t);put('created',created);renderCreated();$('#createNotice').classList.add('show');setTimeout(closeModals,900)});
+$('#createBtn').onclick=()=>{if(!currentUser){profileOpen();return}openModal('organizerModal');if(!isOrganizer)showOrganizerNotice('Создавать турниры могут только назначенные организаторы. Добавь свой аккаунт в cup_tournament_organizers через SQL из файла supabase/cup_organizer_panel.sql.',true);else loadOrganizerEntries()};
+$('#createForm').addEventListener('submit',e=>{e.preventDefault();$('#createNotice').textContent='Используй панель организатора для создания турниров.';$('#createNotice').classList.add('show');openModal('organizerModal')});
 
+
+function showOrganizerNotice(message,isError=false){const n=$('#organizerNotice');if(!n)return;n.textContent=message;n.style.borderColor=isError?'#ff6682':'';n.classList.add('show')}
+async function checkOrganizer(){
+ if(!sbClient||!currentUser){isOrganizer=false;return}
+ const {data,error}=await sbClient.from('cup_tournament_organizers').select('user_id').eq('user_id',currentUser.id).maybeSingle();
+ isOrganizer=!error&&!!data;
+ const b=$('#organizerBtn');if(b)b.textContent=isOrganizer?'⚙ Панель организатора':'⚙ Организатор';
+}
+async function loadCloudTournaments(){
+ if(!sbClient)return;
+ const {data,error}=await sbClient.from('cup_tournaments').select('id,name,format,team_limit,description,status,created_at').order('created_at',{ascending:false});
+ if(error){console.warn('Не удалось загрузить турниры:',error.message);return}
+ cloudTournaments=data||[];renderCloudTournaments();refreshBalanceTournaments();
+}
+function renderCloudTournaments(){
+ const root=$('#tournamentCards');if(!root)return;
+ root.querySelectorAll('[data-cloud-tournament]').forEach(n=>n.remove());
+ cloudTournaments.forEach(t=>{
+  const card=document.createElement('article');card.className='tour';card.dataset.cloudTournament='true';
+  const closed=t.status==='closed';
+  card.innerHTML='<div class="tour-top"><span class="tag '+(closed?'gray':'green')+'">'+(closed?'Регистрация закрыта':'Регистрация открыта')+'</span><span class="tag">'+escapeHtml(t.format||'5×5')+'</span></div><h3>'+escapeHtml(t.name)+'</h3><p>'+escapeHtml(t.description||'Турнир сообщества FLOW CUP')+'</p><div class="tour-stats"><span>♙ До '+Number(t.team_limit||8)+' команд</span><span>◎ '+(closed?'Набор завершён':'Приём заявок')+'</span></div><button class="btn '+(closed?'ghost':'primary')+' register-btn" '+(closed?'disabled':'')+' data-tournament="'+escapeHtml(t.name)+'">'+(closed?'Регистрация закрыта':'Подать заявку')+'</button>';
+  const btn=card.querySelector('button');if(!closed)btn.onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister(t.name)};
+  root.appendChild(card);
+ });
+}
+async function loadOrganizerEntries(){
+ if(!isOrganizer){showOrganizerNotice('Нет прав организатора. Назначь свой аккаунт в Supabase, см. supabase/cup_organizer_panel.sql.',true);return}
+ await loadCloudTournaments();
+ const sel=$('#organizerTournament');const previous=sel.value;
+ const names=[...new Set([...cloudTournaments.map(t=>t.name),...cloudEntries.map(e=>e.tournament_name)])];
+ sel.innerHTML=names.map(n=>'<option value="'+escapeHtml(n)+'">'+escapeHtml(n)+'</option>').join('');
+ if(names.includes(previous))sel.value=previous;
+ const tournament=sel.value;
+ const {data,error}=await sbClient.from('cup_tournament_entries').select('id,tournament_name,nickname,mmr,preferred_role,entry_type,party_name,party_members,party_size,created_at,status').eq('tournament_name',tournament).order('created_at',{ascending:true});
+ const root=$('#organizerEntries');
+ if(error){root.innerHTML='';showOrganizerNotice('Не удалось загрузить заявки: '+error.message,true);return}
+ if(!data?.length){root.innerHTML='<p class="hint">Заявок на этот турнир пока нет.</p>';return}
+ const labels={pending:'На рассмотрении',approved:'Подтверждена',rejected:'Отклонена'};
+ root.innerHTML='<div class="stats" style="margin:12px 0"><div class="stat"><strong>'+data.length+'</strong><small>заявок</small></div><div class="stat"><strong>'+data.filter(e=>(e.status||'pending')==='approved').length+'</strong><small>подтверждено</small></div><div class="stat"><strong>'+data.reduce((n,e)=>n+(Number(e.party_size)||1),0)+'</strong><small>игроков заявлено</small></div></div>'+data.map(e=>'<article class="tour" style="margin:10px 0"><div class="tour-top"><strong>'+escapeHtml(e.party_name||e.nickname)+'</strong><span class="tag">'+Number(e.party_size||1)+' игрок(а/ов)</span></div><p>'+escapeHtml(e.nickname)+' · '+Number(e.mmr)+' MMR · '+escapeHtml(roleLabel[e.preferred_role]||'Любая')+' · '+escapeHtml(e.entry_type)+'</p>'+(e.party_members?.length?'<p class="hint">Состав: '+escapeHtml(e.party_members.join(', '))+'</p>':'')+'<div class="form-row"><div class="field"><label for="status-'+e.id+'">Статус заявки</label><select id="status-'+e.id+'"><option value="pending" '+((e.status||'pending')==='pending'?'selected':'')+'>На рассмотрении</option><option value="approved" '+(e.status==='approved'?'selected':'')+'>Подтверждена</option><option value="rejected" '+(e.status==='rejected'?'selected':'')+'>Отклонена</option></select></div><div class="field" style="justify-content:end"><button class="btn ghost save-entry-status" data-entry="'+e.id+'" type="button">Сохранить статус</button></div></div></article>').join('');
+ root.querySelectorAll('.save-entry-status').forEach(btn=>btn.onclick=async()=>{
+  const id=btn.dataset.entry,status=$('#status-'+id).value;btn.disabled=true;
+  const {error}=await sbClient.from('cup_tournament_entries').update({status}).eq('id',id);btn.disabled=false;
+  if(error){showOrganizerNotice('Не удалось изменить статус: '+error.message,true);return}
+  showOrganizerNotice('Статус заявки обновлён.');await loadCloudEntries();await loadOrganizerEntries();
+ });
+}
+$('#organizerBtn').onclick=async()=>{if(!currentUser){profileOpen();return}openModal('organizerModal');if(!isOrganizer){showOrganizerNotice('Панель доступна только назначенным организаторам. Один раз назначь свой аккаунт по инструкции в supabase/cup_organizer_panel.sql.',true);return}$('#organizerNotice').classList.remove('show');await loadOrganizerEntries()};
+$('#refreshOrganizer').onclick=loadOrganizerEntries;
+$('#organizerTournament').addEventListener('change',loadOrganizerEntries);
+$('#cloudCreateForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(!currentUser||!isOrganizer){showOrganizerNotice('Нет прав на создание турниров.',true);return}
+ const name=$('#orgNewName').value.trim();
+ const payload={name,format:$('#orgNewFormat').value,team_limit:Number($('#orgNewTeams').value),description:$('#orgNewDesc').value.trim(),status:'open',created_by:currentUser.id};
+ const {error}=await sbClient.from('cup_tournaments').insert(payload);
+ if(error){showOrganizerNotice(error.code==='23505'?'Турнир с таким названием уже существует.':'Не удалось создать турнир: '+error.message,true);return}
+ $('#cloudCreateForm').reset();showOrganizerNotice('Турнир создан и сохранён в общей базе.');await loadCloudTournaments();await loadOrganizerEntries();
+});
 function showFriendNotice(message,isError=false){const n=$('#friendGroupNotice');n.textContent=message;n.classList.add('show');n.style.borderColor=isError?'#ff6682':''}
 async function loadFriendGroup(){
   if(!sbClient||!currentUser){friendGroup=null;renderFriendGroup();return}
