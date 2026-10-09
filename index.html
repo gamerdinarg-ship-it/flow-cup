@@ -31,7 +31,7 @@
 <script>
 const SUPABASE_URL = "https://rylqacxdaemtshzvnaat.sbClient.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_39IXfua1UePKCP3HGR0u7A_ZCNht7Uv";
-const sbClient = window.supabase?.createClient ? window.sbClient.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+const sbClient = window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const get=(k,d)=>{try{return JSON.parse(localStorage.getItem('flowcup_'+k))??d}catch{return d}};
 const put=(k,v)=>localStorage.setItem('flowcup_'+k,JSON.stringify(v));
