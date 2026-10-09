@@ -32,7 +32,7 @@
 const SUPABASE_URL = "https://rylqacxdaemtshzvnaat.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_39IXfua1UePKCP3HGR0u7A_ZCNht7Uv";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-const $=s=>document.querySelector(s), $=s=>[...document.querySelectorAll(s)];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const get=(k,d)=>{try{return JSON.parse(localStorage.getItem('flowcup_'+k))??d}catch{return d}};
 const put=(k,v)=>localStorage.setItem('flowcup_'+k,JSON.stringify(v));
 let profile=get('profile',null),entries=get('entries',[]),created=get('created',[]),currentTournament='FLOW OPEN #01',currentUser=null;
