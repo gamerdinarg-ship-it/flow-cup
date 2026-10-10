@@ -216,7 +216,7 @@ $('#joinTop').onclick=$('#joinHero').onclick=()=>{if(!currentUser){profileOpen()
 $('#stackBtn').onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister('FIVE STACK CUP');$('#entryType').value='stack5'};
 $('#friendGroupBtn').onclick=()=>{if(!currentUser){profileOpen();return}openModal('friendGroupModal');loadFriendGroup()};
 function openRegister(name){currentTournament=name;$('#selectedTournament').textContent=name;$('#registerNotice').classList.remove('show');openModal('registerModal')}
-$('.register-btn').forEach(b=>b.onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister(b.dataset.tournament)});
+$$('.register-btn').forEach(b=>b.onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister(b.dataset.tournament)});
 
 document.querySelectorAll('#tournamentCards > .tour').forEach(card=>addShareButton(card,card.querySelector('h3')?.textContent||'Турнир FLOW CUP',card.querySelector('p')?.textContent||''));
 async function signInAndSave(){
