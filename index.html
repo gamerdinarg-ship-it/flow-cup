@@ -124,18 +124,78 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 footer{letter-spacing:.01em}
 @media(max-width:850px){.hero:before{right:0;top:0}.community-strip{padding:14px 22px}}
 @media(max-width:560px){.hero h1{font-size:clamp(48px,13.7vw,72px)}.hero>div:first-child:after{margin-top:25px}.community-strip{gap:8px 12px;font-size:9px;padding:13px 15px}.community-strip i{display:none}.hero-card .stats{gap:6px}.hero-card .stat{padding:10px 8px}.hero-card .stat strong{font-size:19px}}
+
+/* FLOW CUP dark-fantasy visual pass: hero artwork + parchment tournament section */
+:root{--fc-ink:#101116;--fc-paper:#eee9df;--fc-paper-ink:#201c1d;--fc-crimson:#a52b35;--fc-gold:#b6a27a}
+.hero{padding-top:68px;padding-bottom:48px;gap:46px}
+.hero-card{
+  min-height:370px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  background:
+    linear-gradient(180deg,rgba(8,8,10,.08) 0%,rgba(8,8,10,.34) 26%,rgba(8,8,10,.88) 63%,#09090b 100%),
+    url("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react//home/radiant_dire5.jpg") center 34%/cover;
+  border-color:#5b4142;
+}
+.hero-card .mini-title{color:#e9d8c7;text-shadow:0 1px 12px #000}
+.hero-card .featured{margin-top:15px}
+.hero-card .emblem{background:#a52b35;border-color:#e9a6a6;color:#fff}
+.hero-card .stat{background:#09090bd9;border-color:#ffffff22;backdrop-filter:blur(8px)}
+.hero-card .human-note{color:#e1d8d5}
+.hero-card .human-note span{color:#ff7b80}
+.community-strip{border-color:#ffffff26;color:#d9cfc8}
+.section-light{width:100%;background:var(--fc-paper);color:var(--fc-paper-ink);position:relative}
+.section-light .section-head h2{color:var(--fc-paper-ink)}
+.section-light .section-head p{color:#6d6260}
+.section-light .section-head .btn.ghost{color:#2b2525;border-color:#c8bdb1;background:transparent}
+.section-light .section-head .btn.ghost:hover{border-color:#8d7774;background:#e5ddd1}
+.section-light .section-head .btn.primary{color:#fff;background:var(--fc-crimson);border-color:var(--fc-crimson)}
+.section-light .tour{
+  position:relative;overflow:hidden;padding-top:145px;
+  background:#f8f3ea;color:#211c1c;border-color:#d4c8b9;border-radius:7px;
+  box-shadow:0 8px 24px #4a34200a;
+}
+.section-light .tour::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:128px;
+  background-image:linear-gradient(180deg,#09090b12 0%,#09090b12 42%,#09090b99 100%),url("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react//home/radiant_dire5.jpg");
+  background-size:cover;background-position:center 25%;
+  border-bottom:1px solid #4b25262e;
+}
+.section-light #tournamentCards>.tour:nth-child(2)::before{background-position:62% 45%;filter:saturate(.75) sepia(.12)}
+.section-light #tournamentCards>.tour:nth-child(3)::before{background-position:88% 50%;filter:saturate(.8) hue-rotate(-10deg)}
+.section-light .tour>*{position:relative;z-index:1}
+.section-light .tour h3{color:#211c1c;font-size:21px}
+.section-light .tour p{color:#716766}
+.section-light .tour-stats{color:#514847}
+.section-light .tour .tag{color:#5e4d49;background:#e7ddd0}
+.section-light .tour .tag.green{color:#7b2630;background:#f1dfe0}
+.section-light .tour .tag.gray{color:#655b58;background:#e7e1d8}
+.section-light .tour:hover{background:#fffaf2;border-color:#a52b35}
+.section-light .hint{color:#756b68}
+@media(max-width:850px){
+  .hero{padding-top:50px;gap:28px}
+  .hero-card{min-height:330px}
+}
+@media(max-width:560px){
+  .hero{padding-top:36px}
+  .hero-card{min-height:320px;background-position:center 30%}
+  .section-light .tour{padding-top:132px}
+  .section-light .tour::before{height:116px}
+}
+
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap nav"><div class="logo"><span class="brand-mark">JF</span> FLOW<span>.</span>CUP</div><nav class="links"><a href="#tournaments">Турниры</a><a href="#how">Как это работает</a><a href="#community">Сообщество</a></nav><button class="btn ghost" id="profileBtn" type="button" onclick="document.getElementById(&quot;profileModal&quot;).classList.add(&quot;show&quot;)">Мой профиль</button><button class="btn primary" id="joinTop">Участвовать ↗</button></div></header>
 <main>
-<div class="wrap hero"><div><div class="eyebrow"><i class="dot"></i> DOTA 2 COMMUNITY TOURNAMENTS</div><h1>НЕ ПРО-ТИМЫ.<br><em>ПРО СВОИХ.</em></h1><p class="lead">Турниры для тех, кто просто хочет нормально сыграть. Залетай соло, тащи друзей или приходи уже готовой пятёркой. Без пафоса — игра покажет.</p><div class="actions"><button class="btn primary" id="joinHero">Найти турнир <span aria-hidden="true">→</span></button><a class="btn ghost" href="#tournaments" style="text-decoration:none">Все турниры ↓</a></div></div>
+<div class="wrap hero"><div><div class="eyebrow"><i class="dot"></i> DOTA 2 COMMUNITY TOURNAMENTS</div><h1>ТВОЯ ИГРА.<br><em>ТВОИ ЛЮДИ.</em></h1><p class="lead">Собирай своих, залетай соло или приходи готовой пятёркой. Турниры для тех, кому важна сама игра — и люди по ту сторону экрана.</p><div class="actions"><button class="btn primary" id="joinHero">Найти турнир <span aria-hidden="true">→</span></button><a class="btn ghost" href="#tournaments" style="text-decoration:none">Все турниры ↓</a></div></div>
 <aside class="hero-card"><div class="mini-title">НАШ ПЕРВЫЙ ЗАМЕС <span class="hero-index">/ 001</span></div><div class="featured"><div class="emblem">FC</div><div><h3>FLOW OPEN #01</h3><p>Первый кубок. Без взноса и короны на голове.</p></div></div><div class="stats"><div class="stat"><strong id="playerCount">0</strong><small>игроков в заявках</small></div><div class="stat"><strong>5×5</strong><small>формат матчей</small></div><div class="stat"><strong>FREE</strong><small>вход свободный</small></div></div><p class="human-note"><span>↳</span> Один пришёл — тоже норм. Друзей не раскидываем по разным командам.</p></aside></div>
-<div class="community-strip" aria-label="Правила FLOW CUP"><span>НЕ НУЖЕН ПРО-СТАТУС</span><i>✳</i><span>МОЖНО ПРИЙТИ СОЛО</span><i>✳</i><span>СВОИХ НЕ БРОСАЕМ</span><i>✳</i><span>ИГРАЕМ РАДИ ИГРЫ</span></div><section class="wrap section" id="tournaments"><div class="section-head"><div><h2>НУ ЧТО, ПОИГРАЕМ?</h2><p>Выбирай, куда залететь. Остальное разрулим по ходу.</p></div><button class="btn ghost" id="createBtn">＋ Создать турнир</button><button class="btn ghost" id="organizerBtn">⚙ Организатор</button><button class="btn primary" id="balanceBtn">⚖ Баланс команд</button></div><div class="cards" id="tournamentCards">
+<div class="community-strip" aria-label="Правила FLOW CUP"><span>НЕ НУЖЕН ПРО-СТАТУС</span><i>✳</i><span>МОЖНО ПРИЙТИ СОЛО</span><i>✳</i><span>СВОИХ НЕ БРОСАЕМ</span><i>✳</i><span>ИГРАЕМ РАДИ ИГРЫ</span></div><div class="section-light">
+<section class="wrap section" id="tournaments"><div class="section-head"><div><h2>НУ ЧТО, ПОИГРАЕМ?</h2><p>Выбирай, куда залететь. Остальное разрулим по ходу.</p></div><button class="btn ghost" id="createBtn">＋ Создать турнир</button><button class="btn ghost" id="organizerBtn">⚙ Организатор</button><button class="btn primary" id="balanceBtn">⚖ Баланс команд</button></div><div class="cards" id="tournamentCards">
 <article class="tour"><div class="tour-top"><span class="tag green">Регистрация открыта</span><span class="tag">5×5</span></div><h3>FLOW OPEN #01</h3><p>Первый открытый кубок сообщества</p><div class="tour-stats"><span>◷ Скоро</span><span>♙ До 8 команд</span><span>◎ Любой MMR</span></div><button class="btn primary register-btn" data-tournament="FLOW OPEN #01">Подать заявку</button></article>
 <article class="tour"><div class="tour-top"><span class="tag">Тестовый формат</span><span class="tag">Mix</span></div><h3>FLOW MIX NIGHT</h3><p>Случайные команды с балансом по MMR</p><div class="tour-stats"><span>◷ По набору</span><span>♙ Соло и пати</span></div><button class="btn register-btn" data-tournament="FLOW MIX NIGHT">Подать заявку</button></article>
 <article class="tour"><div class="tour-top"><span class="tag gray">Скоро</span><span class="tag">Stack</span></div><h3>FIVE STACK CUP</h3><p>Для готовых команд из пяти игроков</p><div class="tour-stats"><span>◷ Анонсируется</span><span>♙ Готовый стак</span></div><button class="btn register-btn" data-tournament="FIVE STACK CUP">Оставить заявку</button></article>
 </div><p class="hint" style="margin-top:14px">Турниры пока тестовые. Заявки сохраняются в общей базе; реальные матчи и результаты организатор подтверждает вручную.</p></section>
+</div>
 <section class="wrap section" id="publishedTeams"><div class="section-head"><div><h2>КТО С КЕМ ИГРАЕТ</h2><p>Здесь появятся собранные команды — без гаданий по чату</p></div><button class="btn ghost" id="refreshPublishedTeams" type="button">Обновить</button></div><div id="publishedRosterList" class="cards"><div class="empty">Пока нет опубликованных составов. Когда организатор соберёт команды, они появятся здесь.</div></div></section>
 <section class="wrap section" id="how"><div class="section-head"><div><h2>КАК ЭТО УСТРОЕНО</h2><p>Три шага. Без квеста на 40 минут.</p></div></div><div class="steps"><div class="step"><b>01 / ПРОФИЛЬ</b><strong>Укажи свой MMR</strong><small>Добавь ник, Steam-ссылку и удобную позицию.</small></div><div class="step"><b>02 / ГРУППА</b><strong>Собери друзей</strong><small>Играй соло, дуо, группой или полным стаком из пяти.</small></div><div class="step"><b>03 / МАТЧ</b><strong>Выходи на турнир</strong><small>Организатор формирует составы и публикует сетку.</small></div></div></section>
 <section class="wrap section" id="community"><div class="bottom-grid"><div class="info-panel"><h3>Уже есть своя пятёрка?</h3><p>Красота. Регистрируйтесь вместе — заявка одна, ники на месте, команда остаётся командой. Даже если у вас MMR как американские горки.</p><button class="btn primary" id="stackBtn">Зарегистрировать стак</button><button class="btn ghost" id="friendGroupBtn" style="width:100%;margin-top:9px">Моя группа и приглашения</button></div><div class="info-panel"><h3>Мой FLOW CUP</h3><p>Профиль и заявки на турниры сохраняются в общей базе. Приглашения друзей и Steam-вход подключим отдельным этапом.</p><div id="profileSummary" class="my-data">Профиль ещё не заполнен.</div><button class="btn ghost" id="profileBtn2" type="button" onclick="document.getElementById(&quot;profileModal&quot;).classList.add(&quot;show&quot;)">Настроить профиль</button><h3 style="margin-top:22px">Мои заявки</h3><div id="myApplications" class="my-data">Войди в аккаунт, чтобы увидеть свои заявки.</div></div></div></section>
