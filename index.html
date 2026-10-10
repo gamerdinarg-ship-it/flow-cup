@@ -71,6 +71,18 @@ footer{border-top-color:#29292f}
 @media(max-width:850px){.hero{padding-top:54px;gap:30px}}
 @media(max-width:560px){.hero{padding-top:38px}.nav{height:62px}h1{font-size:clamp(48px,14vw,70px)}.hero-card{padding:17px}}
 
+
+/* Fast, accessible motion and sharing */
+.card-actions{display:flex;gap:8px;margin-top:10px}
+.card-actions .btn{width:auto;flex:1;margin:0}
+.share-btn,.share-roster{font-size:12px;border-color:#34343b;color:#d0d0d6}
+.share-roster{margin-top:14px;width:100%}
+.share-btn:hover,.share-roster:hover{border-color:#e34855;color:#fff}
+.share-feedback{position:fixed;z-index:30;left:50%;bottom:22px;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#17171b;border:1px solid #45454e;color:#f2f2f4;padding:11px 15px;border-radius:6px;box-shadow:0 8px 32px #0005;max-width:calc(100vw - 28px);font-size:13px;transition:opacity .16s ease,transform .16s ease}
+.share-feedback.visible{opacity:1;transform:translate(-50%,0)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #e34855;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
@@ -155,7 +167,8 @@ $('#joinTop').onclick=$('#joinHero').onclick=()=>{if(!currentUser){profileOpen()
 $('#stackBtn').onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister('FIVE STACK CUP');$('#entryType').value='stack5'};
 $('#friendGroupBtn').onclick=()=>{if(!currentUser){profileOpen();return}openModal('friendGroupModal');loadFriendGroup()};
 function openRegister(name){currentTournament=name;$('#selectedTournament').textContent=name;$('#registerNotice').classList.remove('show');openModal('registerModal')}
-$$('.register-btn').forEach(b=>b.onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister(b.dataset.tournament)});
+$('.register-btn').forEach(b=>b.onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister(b.dataset.tournament)});
+$('#tournamentCards > .tour').forEach(card=>addShareButton(card,card.querySelector('h3')?.textContent||'Турнир FLOW CUP',card.querySelector('p')?.textContent||''));
 async function signInAndSave(){
   if(!sbClient){showProfileNotice('Не загрузился модуль авторизации Supabase. Обнови страницу или проверь блокировщик скриптов.',true);return}
   const email=$('#authEmail').value.trim(),password=$('#authPassword').value;
@@ -215,7 +228,7 @@ function renderCloudTournaments(){
   const closed=t.status==='closed';
   card.innerHTML='<div class="tour-top"><span class="tag '+(closed?'gray':'green')+'">'+(closed?'Регистрация закрыта':'Регистрация открыта')+'</span><span class="tag">'+escapeHtml(t.format||'5×5')+'</span></div><h3>'+escapeHtml(t.name)+'</h3><p>'+escapeHtml(t.description||'Турнир сообщества FLOW CUP')+'</p><div class="tour-stats"><span>♙ До '+Number(t.team_limit||8)+' команд</span><span>◎ '+(closed?'Набор завершён':'Приём заявок')+'</span></div><button class="btn '+(closed?'ghost':'primary')+' register-btn" '+(closed?'disabled':'')+' data-tournament="'+escapeHtml(t.name)+'">'+(closed?'Регистрация закрыта':'Подать заявку')+'</button>';
   const btn=card.querySelector('button');if(!closed)btn.onclick=()=>{if(!currentUser||!profile){profileOpen();return}openRegister(t.name)};
-  root.appendChild(card);
+  addShareButton(card,t.name,t.description||'Турнир сообщества FLOW CUP');root.appendChild(card);
  });
 }
 
@@ -227,8 +240,9 @@ async function loadPublishedRosters(){
  root.innerHTML=data.map(row=>{
   const teams=Array.isArray(row.composition?.teams)?row.composition.teams:[];
   const populated=teams.filter(t=>Array.isArray(t.units)&&t.units.length);
-  return '<article class="tour" style="grid-column:1/-1"><div class="tour-top"><span class="tag green">Опубликовано</span><span class="tag">'+populated.length+' команд</span></div><h3>'+escapeHtml(row.tournament_name)+'</h3><p>Обновлено '+new Date(row.published_at).toLocaleString('ru-RU')+'</p><div class="cards" style="margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">'+(populated.length?populated.map(t=>'<article class="tour"><div class="tour-top"><strong>'+escapeHtml(t.name||'Команда')+'</strong><span class="tag">'+Number(t.players||0)+'/5</span></div><p style="margin:10px 0">Средний MMR ≈ '+Number(t.average_mmr||0)+'</p>'+(t.units||[]).map(u=>'<div style="padding:7px 0;border-bottom:1px solid var(--line)"><strong>'+escapeHtml(u.name||u.captain||'Игрок')+'</strong><div class="hint">'+escapeHtml(u.captain||'')+' · '+Number(u.mmr||0)+' MMR · '+Number(u.size||1)+' игрок(а/ов)'+((u.members||[]).length?' · '+escapeHtml(u.members.join(', ')):'')+'</div></div>').join('')+'</article>').join(''):'<div class="empty">Составы пока пусты.</div>')+'</div></article>';
+  return '<article class="tour roster-share-card" style="grid-column:1/-1"><div class="tour-top"><span class="tag green">Опубликовано</span><span class="tag">'+populated.length+' команд</span></div><h3>'+escapeHtml(row.tournament_name)+'</h3><p>Обновлено '+new Date(row.published_at).toLocaleString('ru-RU')+'</p><div class="cards" style="margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">'+(populated.length?populated.map(t=>'<article class="tour"><div class="tour-top"><strong>'+escapeHtml(t.name||'Команда')+'</strong><span class="tag">'+Number(t.players||0)+'/5</span></div><p style="margin:10px 0">Средний MMR ≈ '+Number(t.average_mmr||0)+'</p>'+(t.units||[]).map(u=>'<div style="padding:7px 0;border-bottom:1px solid var(--line)"><strong>'+escapeHtml(u.name||u.captain||'Игрок')+'</strong><div class="hint">'+escapeHtml(u.captain||'')+' · '+Number(u.mmr||0)+' MMR · '+Number(u.size||1)+' игрок(а/ов)'+((u.members||[]).length?' · '+escapeHtml(u.members.join(', ')):'')+'</div></div>').join('')+'</article>').join(''):'<div class="empty">Составы пока пусты.</div>')+'</div><button class="btn ghost share-roster" type="button">↗ Поделиться составами</button></article>';
  }).join('');
+ root.querySelectorAll('.roster-share-card').forEach(card=>{const title=card.querySelector('h3')?.textContent||'Составы FLOW CUP';card.querySelector('.share-roster')?.addEventListener('click',()=>shareFlow(title,'Опубликованные составы турнира FLOW CUP'));});
 }
 $('#refreshPublishedTeams')?.addEventListener('click',loadPublishedRosters);
 function renderRosterPreview(result,tournament){
@@ -427,7 +441,19 @@ $('#loadBalanceDraft').onclick=async()=>{
  renderBalanceResults(result,tournament);
  n.textContent='Черновик загружен'+(data.updated_at?' · сохранён '+new Date(data.updated_at).toLocaleString('ru-RU'):'')+'. Это личный черновик, он не опубликован.';n.classList.add('show');
 };
-function renderCreated(){created.forEach((t,i)=>{if($('#created-'+i))return;const card=document.createElement('article');card.className='tour';card.id='created-'+i;card.innerHTML='<div class="tour-top"><span class="tag green">Создан вами</span><span class="tag">'+escapeHtml(t.format)+'</span></div><h3>'+escapeHtml(t.name)+'</h3><p>'+escapeHtml(t.desc||'Пользовательский турнир')+'</p><div class="tour-stats"><span>♙ До '+escapeHtml(t.teams)+' команд</span><span>◎ Заявок: '+entries.filter(x=>x.tournament===t.name).length+'</span></div><button class="btn register-btn">Подать заявку</button>';card.querySelector('button').onclick=()=>{if(!profile){profileOpen();return}openRegister(t.name)};$('#tournamentCards').appendChild(card)})}
+function renderCreated(){created.forEach((t,i)=>{if($('#created-'+i))return;const card=document.createElement('article');card.className='tour';card.id='created-'+i;card.innerHTML='<div class="tour-top"><span class="tag green">Создан вами</span><span class="tag">'+escapeHtml(t.format)+'</span></div><h3>'+escapeHtml(t.name)+'</h3><p>'+escapeHtml(t.desc||'Пользовательский турнир')+'</p><div class="tour-stats"><span>♙ До '+escapeHtml(t.teams)+' команд</span><span>◎ Заявок: '+entries.filter(x=>x.tournament===t.name).length+'</span></div><button class="btn register-btn">Подать заявку</button>';card.querySelector('button').onclick=()=>{if(!profile){profileOpen();return}openRegister(t.name)};addShareButton(card,t.name,t.desc||'Пользовательский турнир FLOW CUP');$('#tournamentCards').appendChild(card)})}
+
+async function shareFlow(title,description='') {
+ const url=new URL(window.location.href);url.hash='tournaments';
+ const payload={title:title+' — FLOW CUP',text:description||'Залетай на турнир вместе с нами.',url:url.toString()};
+ try{if(navigator.share&&(!navigator.canShare||navigator.canShare(payload))){await navigator.share(payload);return}}
+ catch(e){if(e?.name==='AbortError')return}
+ try{await navigator.clipboard.writeText(payload.url);showShareFeedback('Ссылка скопирована — кидай друзьям 👀')}
+ catch{const field=document.createElement('textarea');field.value=payload.url;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();let copied=false;try{copied=document.execCommand('copy')}catch{}field.remove();showShareFeedback(copied?'Ссылка скопирована — кидай друзьям 👀':'Не получилось скопировать ссылку. Скопируй адрес страницы вручную.')}
+}
+function showShareFeedback(message){let node=document.getElementById('shareFeedback');if(!node){node=document.createElement('div');node.id='shareFeedback';node.className='share-feedback';node.setAttribute('role','status');node.setAttribute('aria-live','polite');document.body.appendChild(node)}node.textContent=message;node.classList.add('visible');clearTimeout(window.__flowShareTimeout);window.__flowShareTimeout=setTimeout(()=>node.classList.remove('visible'),2600)}
+function addShareButton(card,title,description=''){if(!card||card.querySelector('.share-btn'))return;const actions=document.createElement('div');actions.className='card-actions';const share=document.createElement('button');share.type='button';share.className='btn ghost share-btn';share.textContent='↗ Поделиться';share.setAttribute('aria-label','Поделиться: '+title);share.addEventListener('click',()=>shareFlow(title,description));actions.appendChild(share);card.appendChild(actions)}
+
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderStats(){$('#playerCount').textContent=cloudEntriesLoaded?cloudEntries.reduce((n,e)=>n+(Number(e.party_size)||1),0):entries.reduce((n,e)=>n+(e.size||1),0)}
 function renderProfile(){$('#profileSummary').textContent=profile?profile.nick+' · '+profile.mmr+' MMR · '+profile.role:'Профиль ещё не заполнен.'}
