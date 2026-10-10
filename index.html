@@ -27,13 +27,57 @@ h1 em{color:#e45763}
 .field input:focus,.field select:focus{border-color:#e45763}
 .footer-sep{color:#e45763;padding:0 5px}
 
+
+/* FLOW CUP / visual system v2 — editorial, sharp, low-noise */
+:root{--bg:#09090b;--panel:#111114;--panel2:#19191e;--line:#2a2a31;--text:#f2f2f4;--muted:#96969f;--blue:#e34855;--cyan:#d5d5db;--green:#d7d7dc;--red:#e34855}
+body{background:var(--bg);background-image:linear-gradient(90deg,#ffffff04 1px,transparent 1px),linear-gradient(#ffffff04 1px,transparent 1px);background-size:48px 48px;background-position:center top}
+.top{background:#09090bea;border-bottom-color:#ffffff18}
+.nav{height:68px}
+.logo{font-size:18px;letter-spacing:1.2px}
+.logo .brand-mark{border-radius:4px;width:29px;height:29px}
+.btn{border-radius:6px;transition:background .16s,border-color .16s,transform .16s;box-shadow:none}
+.btn:hover{filter:none;border-color:#666670}
+.primary{background:#e34855;border-color:#e34855;box-shadow:none}
+.primary:hover{background:#f15b67;border-color:#f15b67;transform:translateY(-1px)}
+.hero{padding-top:82px;padding-bottom:60px;gap:54px}
+.eyebrow{border-radius:4px;background:#171216;border-color:#44262b;color:#e9a3a9;letter-spacing:1.4px}
+.dot{box-shadow:none;background:#e34855}
+h1{font-size:clamp(52px,7.6vw,94px);letter-spacing:-.075em;line-height:.91;font-weight:950;margin:24px 0}
+h1 em{color:#e34855}
+.lead{font-size:16px;line-height:1.7;max-width:480px}
+.hero-card{border-radius:8px;background:#111114;border-color:#2d2d34;box-shadow:none;padding:26px}
+.hero-card:after{display:none}
+.emblem{border-radius:5px;font-size:16px;font-weight:950;letter-spacing:-1px}
+.stat{border-radius:5px;background:#0b0b0e;border-color:#29292f}
+.stat strong{font-size:22px;letter-spacing:-.04em}
+.stat small,.mini-title{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.5px}
+.section{padding-top:34px;padding-bottom:54px}
+.section-head{margin-bottom:20px}
+.section-head h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.055em;font-weight:850}
+.cards{gap:12px}
+.tour{border-radius:7px;background:#111114;border-color:#29292f;transition:border-color .16s,background .16s}
+.tour:hover{transform:none;border-color:#6a333a;background:#141216}
+.tour h3{letter-spacing:-.035em}
+.tag{border-radius:3px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:.25px}
+.tag.green{color:#e7a0a6;background:#29171a}
+.tag.gray{color:#aaaab2;background:#222227}
+.info-panel{border-radius:7px;background:#111114;border-color:#29292f}
+.step{border-radius:5px;background:#101013}
+.step b{color:#e34855;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.modal{border-radius:8px;background:#111114;border-color:#35353c}
+.field input,.field select{border-radius:5px;background:#0b0b0e}
+.empty{border-radius:6px}
+footer{border-top-color:#29292f}
+@media(max-width:850px){.hero{padding-top:54px;gap:30px}}
+@media(max-width:560px){.hero{padding-top:38px}.nav{height:62px}h1{font-size:clamp(48px,14vw,70px)}.hero-card{padding:17px}}
+
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap nav"><div class="logo"><span class="brand-mark">JF</span> FLOW<span>.</span>CUP</div><nav class="links"><a href="#tournaments">Турниры</a><a href="#how">Как это работает</a><a href="#community">Сообщество</a></nav><button class="btn ghost" id="profileBtn">Мой профиль</button><button class="btn primary" id="joinTop">Участвовать ↗</button></div></header>
 <main>
-<div class="wrap hero"><div><div class="eyebrow"><i class="dot"></i> DOTA 2 COMMUNITY TOURNAMENTS</div><h1>Твоя команда.<br>Твой путь.<br><em>Твой FLOW.</em></h1><p class="lead">Турниры по Dota 2 для соло-игроков, друзей и готовых стаков. Собирай команду, играй матчи и доказывай свой уровень.</p><div class="actions"><button class="btn primary" id="joinHero">Найти турнир <span aria-hidden="true">→</span></button><a class="btn ghost" href="#tournaments" style="text-decoration:none">Смотреть сетку ↓</a></div></div>
-<aside class="hero-card"><div class="mini-title">БЛИЖАЙШИЙ ТУРНИР</div><div class="featured"><div class="emblem">⚔</div><div><h3>FLOW OPEN #01</h3><p>Открытый турнир · Все уровни</p></div></div><div class="stats"><div class="stat"><strong id="playerCount">0</strong><small>игроков в заявках</small></div><div class="stat"><strong>5×5</strong><small>формат матчей</small></div><div class="stat"><strong>FREE</strong><small>вход свободный</small></div></div><p style="margin:18px 0 0;color:var(--muted);font-size:12px">Соло, пати и полные стаки — можно играть своим составом независимо от разницы MMR.</p></aside></div>
+<div class="wrap hero"><div><div class="eyebrow"><i class="dot"></i> DOTA 2 COMMUNITY TOURNAMENTS</div><h1>DOTA 2.<br>БЕЗ <em>ЛИШНЕГО.</em></h1><p class="lead">Соло, друзья или готовый стак. Регистрируйся, собирай составы и играй за результат.</p><div class="actions"><button class="btn primary" id="joinHero">Найти турнир <span aria-hidden="true">→</span></button><a class="btn ghost" href="#tournaments" style="text-decoration:none">Все турниры ↓</a></div></div>
+<aside class="hero-card"><div class="mini-title">БЛИЖАЙШИЙ ТУРНИР</div><div class="featured"><div class="emblem">FC</div><div><h3>FLOW OPEN #01</h3><p>Открытый турнир · Все уровни</p></div></div><div class="stats"><div class="stat"><strong id="playerCount">0</strong><small>игроков в заявках</small></div><div class="stat"><strong>5×5</strong><small>формат матчей</small></div><div class="stat"><strong>FREE</strong><small>вход свободный</small></div></div><p style="margin:18px 0 0;color:var(--muted);font-size:12px">Соло, пати и полные стаки — можно играть своим составом независимо от разницы MMR.</p></aside></div>
 <section class="wrap section" id="tournaments"><div class="section-head"><div><h2>Турниры</h2><p>Выбирай формат и собирай состав</p></div><button class="btn ghost" id="createBtn">＋ Создать турнир</button><button class="btn ghost" id="organizerBtn">⚙ Организатор</button><button class="btn primary" id="balanceBtn">⚖ Баланс команд</button></div><div class="cards" id="tournamentCards">
 <article class="tour"><div class="tour-top"><span class="tag green">Регистрация открыта</span><span class="tag">5×5</span></div><h3>FLOW OPEN #01</h3><p>Первый открытый кубок сообщества</p><div class="tour-stats"><span>◷ Скоро</span><span>♙ До 8 команд</span><span>◎ Любой MMR</span></div><button class="btn primary register-btn" data-tournament="FLOW OPEN #01">Подать заявку</button></article>
 <article class="tour"><div class="tour-top"><span class="tag">Тестовый формат</span><span class="tag">Mix</span></div><h3>FLOW MIX NIGHT</h3><p>Случайные команды с балансом по MMR</p><div class="tour-stats"><span>◷ По набору</span><span>♙ Соло и пати</span></div><button class="btn register-btn" data-tournament="FLOW MIX NIGHT">Подать заявку</button></article>
